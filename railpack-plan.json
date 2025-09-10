@@ -1,0 +1,7 @@
+{
+  "install": "pnpm install",
+  "prebuild": "pnpm store prune",
+  "build": "pnpm build",
+  "start": "npx vite preview --port $PORT --host",
+  "nodeVersion": "22.19.0"
+}
