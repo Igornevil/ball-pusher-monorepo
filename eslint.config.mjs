@@ -30,6 +30,7 @@ export default [
   // ===== BACKEND =====
   {
     files: ['packages/backend/**/*.{ts,js}'],
+    ignores: ['packages/backend/dist/**'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
