@@ -8,12 +8,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default [
+  // ===== FRONTEND =====
   {
     files: ['packages/frontend/**/*.{ts,tsx,js,jsx}'],
+    ignores: ['packages/frontend/dist/**'], // игнорируем билд
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: resolve(__dirname, 'packages/frontend/tsconfig.json'),
+        project: resolve(__dirname, 'packages/frontend/tsconfig.eslint.json'), // теперь ESLint видит исходники
         tsconfigRootDir: __dirname,
       },
     },
@@ -22,8 +24,26 @@ export default [
     },
     rules: {
       semi: ['error', 'always'],
-      quotes: ['error', 'double'],
-      // здесь можно добавить свои правила
+      quotes: ['error', 'single'],
+    },
+  },
+  // ===== BACKEND =====
+  {
+    files: ['packages/backend/**/*.{ts,js}'],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        project: resolve(__dirname, 'packages/backend/tsconfig.json'),
+        tsconfigRootDir: __dirname,
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+    },
+    rules: {
+      semi: ['error', 'always'],
+      quotes: ['error', 'single'],
+      // свои правила бэкенда
     },
   },
 ];
