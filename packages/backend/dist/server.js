@@ -1,26 +1,23 @@
-'use strict';
-var __importDefault =
-  (this && this.__importDefault) ||
-  function (mod) {
-    return mod && mod.__esModule ? mod : { default: mod };
-  };
-Object.defineProperty(exports, '__esModule', { value: true });
-const express_1 = __importDefault(require('express'));
-const path_1 = __importDefault(require('path'));
-const ws_1 = require('ws');
-const http_1 = __importDefault(require('http'));
-const app = (0, express_1.default)();
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import http from 'http';
+import { WebSocketServer } from 'ws';
+const app = express();
 const port = process.env.PORT || 3000;
-// Serve frontend
-const frontendPath = path_1.default.join(__dirname, '../public');
-app.use(express_1.default.static(frontendPath));
-// Fallback to index.html (SPA routing)
+// ESM: __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+// Статика фронтенда
+const frontendPath = path.join(__dirname, '../public');
+app.use(express.static(frontendPath));
+// SPA fallback
 app.get('*', (req, res) => {
-  res.sendFile(path_1.default.join(frontendPath, 'index.html'));
+  res.sendFile(path.join(frontendPath, 'index.html'));
 });
-// Create HTTP + WS server
-const server = http_1.default.createServer(app);
-const wss = new ws_1.WebSocketServer({ server });
+// HTTP + WebSocket сервер
+const server = http.createServer(app);
+const wss = new WebSocketServer({ server });
 wss.on('connection', (ws) => {
   console.log('Client connected');
   ws.on('message', (msg) => console.log('Received:', msg.toString()));

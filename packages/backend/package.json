@@ -8,6 +8,7 @@
     "dev": "nodemon --watch src --ext ts --exec \"ts-node src/server.ts\"",
     "build": "tsc",
     "start": "node dist/server.js",
+    "lint": "echo 'No lint for backend'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
