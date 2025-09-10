@@ -1,31 +1,29 @@
-import globals from 'globals';
-import pluginJs from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import eslintConfigPrettier from 'eslint-config-prettier';
+// eslint.config.mjs
+import tsPlugin from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
 
-export default tseslint.config(
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default [
   {
-    ignores: ['node_modules', 'dist', 'build', 'coverage'],
-  },
-  {
+    files: ['packages/frontend/**/*.{ts,tsx,js,jsx}'],
     languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
-      parser: tseslint.parser,
+      parser: tsParser,
       parserOptions: {
-        projectService: true,
-        allowDefaultProject: true,
+        project: resolve(__dirname, 'packages/frontend/tsconfig.json'),
+        tsconfigRootDir: __dirname,
       },
     },
     plugins: {
-      '@typescript-eslint': tseslint.plugin,
+      '@typescript-eslint': tsPlugin,
     },
     rules: {
-      ...pluginJs.configs.recommended.rules,
-      ...tseslint.configs.recommended.rules,
+      semi: ['error', 'always'],
+      quotes: ['error', 'double'],
+      // здесь можно добавить свои правила
     },
   },
-  eslintConfigPrettier,
-);
+];
