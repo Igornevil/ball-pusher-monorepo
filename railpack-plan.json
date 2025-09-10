@@ -1,7 +1,10 @@
 {
-  "install": "pnpm install",
-  "prebuild": "pnpm store prune",
+  "node": "22.19.0",
+  "packageManager": "pnpm",
+  "install": "pnpm store prune && pnpm install --network-concurrency 1",
   "build": "pnpm build",
   "start": "npx vite preview --port $PORT --host",
-  "nodeVersion": "22.19.0"
+  "cache": {
+    "paths": ["node_modules", "packages/**/node_modules", ".pnpm-store"]
+  }
 }
