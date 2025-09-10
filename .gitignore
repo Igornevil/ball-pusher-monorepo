@@ -1,0 +1,39 @@
+# Зависимости
+/node_modules
+/packages/**/node_modules
+/.pnpm-store
+
+# Локи, кэш, логи
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+npm-debug.log*
+.DS_Store
+*.log
+/log/
+
+# Сборки и временные файлы
+/dist/
+/build/
+/out/
+.env
+.env.*.local
+.tmp/
+.temp/
+
+# IDE
+.idea/
+.vscode/
+*.sublime-workspace
+*.idea
+
+# Разное
+/coverage
+/.nyc_output
+.eslintcache
+.stylelintcache
+/public/build
+/public/dist
+
+# Vite.js
+.vite
