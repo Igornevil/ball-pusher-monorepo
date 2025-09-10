@@ -1,21 +1,26 @@
 import express from 'express';
 import path from 'path';
-import { WebSocketServer } from 'ws';
+import { fileURLToPath } from 'url';
 import http from 'http';
+import { WebSocketServer } from 'ws';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Serve frontend
+// ESM: __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Статика фронтенда
 const frontendPath = path.join(__dirname, '../public');
 app.use(express.static(frontendPath));
 
-// Fallback to index.html (SPA routing)
+// SPA fallback
 app.get('*', (req, res) => {
   res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
-// Create HTTP + WS server
+// HTTP + WebSocket сервер
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
