@@ -13,11 +13,10 @@ export class GameManager {
 
   createRoom(settings: GameSettings): Room {
     const roomId = uuidv4();
-    const room = new Room(roomId, settings, this.io);
+    const room = new Room(roomId, settings, this.io, () => {
+      this.removeRoom(roomId);
+    });
     this.rooms.set(roomId, room);
-    console.log(
-      `[GameManager] Кімната ${roomId} успішно створена та додана до менеджера.`,
-    );
     return room;
   }
 

@@ -21,11 +21,18 @@ export class Room implements IGameRoom {
   public balls: Map<string, Matter.Body> = new Map();
   public gameStartTime: number | null = null;
   public gameDuration: number | null = null;
+  private onFinished?: () => void;
 
-  constructor(id: string, settings: GameSettings, io?: Server) {
+  constructor(
+    id: string,
+    settings: GameSettings,
+    io?: Server,
+    onFinished?: () => void,
+  ) {
     this.id = id;
     this.settings = settings;
     this.io = io;
+    this.onFinished = onFinished;
     this.engine = Engine.create({ gravity: { x: 0, y: 0 } });
   }
 
@@ -66,9 +73,18 @@ export class Room implements IGameRoom {
   }
 
   stopGame(): void {
+    this.status = 'finished';
+
     if (this.gameInterval) {
       clearInterval(this.gameInterval);
       this.gameInterval = null;
+    }
+
+    if (this.onFinished) {
+      setTimeout(() => {
+        this.onFinished!();
+        console.log(`[Room ${this.id}] Видалена`);
+      }, 1000);
     }
 
     if (this.gameStartTime && !this.gameDuration) {
