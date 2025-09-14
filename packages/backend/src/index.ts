@@ -53,6 +53,29 @@ for (const possiblePath of possibleStaticPaths) {
   }
 }
 
+console.log('=== DETAILED DIAGNOSTICS ===');
+try {
+  const packagesDir = path.join(process.cwd(), 'packages');
+  console.log('Packages dir exists:', fs.existsSync(packagesDir));
+  if (fs.existsSync(packagesDir)) {
+    console.log('Packages content:', fs.readdirSync(packagesDir));
+
+    const frontendDir = path.join(packagesDir, 'frontend');
+    console.log('Frontend dir exists:', fs.existsSync(frontendDir));
+    if (fs.existsSync(frontendDir)) {
+      console.log('Frontend content:', fs.readdirSync(frontendDir));
+
+      const frontendDist = path.join(frontendDir, 'dist');
+      console.log('Frontend dist exists:', fs.existsSync(frontendDist));
+      if (fs.existsSync(frontendDist)) {
+        console.log('Frontend dist content:', fs.readdirSync(frontendDist));
+      }
+    }
+  }
+} catch (error) {
+  console.log('Diagnostic error:', error);
+}
+
 if (staticPath) {
   app.use(express.static(staticPath));
   app.get('*', (req, res) => {
