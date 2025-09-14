@@ -2,6 +2,7 @@ import express from 'express';
 import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 import { Server } from 'socket.io';
 import { GameManager } from './game/GameManager.js';
 import { registerSocketHandlers } from './network/socketHandlers.js';
@@ -18,7 +19,7 @@ const io = new Server(server, {
   },
 });
 
-// ✅ РАЗРЕШАЕМ CSP ДЛЯ INLINE СКРИПТОВ
+// CSP headers
 app.use((req, res, next) => {
   res.setHeader(
     'Content-Security-Policy',
@@ -28,34 +29,60 @@ app.use((req, res, next) => {
   next();
 });
 
-// ✅ ПРОВЕРЯЕМ СУЩЕСТВОВАНИЕ ПАПКИ СТАТИКИ
-const staticPath = path.join(__dirname, '../../frontend/dist');
-console.log('🔄 Serving static from:', staticPath);
+// Диагностика файловой системы
+console.log('=== FILE SYSTEM DIAGNOSTICS ===');
+console.log('Current dir:', __dirname);
+console.log('Root files:', fs.readdirSync(path.join(__dirname, '../..')));
 
-// ✅ SERVING СТАТИКИ С ПРОВЕРКОЙ
-app.use(express.static(staticPath));
+const possibleStaticPaths = [
+  path.join(__dirname, '../../frontend/dist'),
+  path.join(__dirname, '../../../frontend/dist'),
+  '/app/packages/frontend/dist',
+  path.join(process.cwd(), 'packages/frontend/dist'),
+];
 
-// ✅ API HEALTH CHECK
+let staticPath = null;
+
+for (const possiblePath of possibleStaticPaths) {
+  console.log('Checking path:', possiblePath);
+  if (fs.existsSync(possiblePath)) {
+    staticPath = possiblePath;
+    console.log('✅ Found static at:', staticPath);
+    console.log('Files in dist:', fs.readdirSync(staticPath));
+    break;
+  }
+}
+
+if (staticPath) {
+  app.use(express.static(staticPath));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(staticPath, 'index.html'));
+  });
+} else {
+  console.log('❌ No static files found');
+  app.get('/', (req, res) => {
+    res.send('Backend running. Frontend not built. Check Railway build logs.');
+  });
+}
+
+// API routes
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', staticPath });
-});
-
-// ✅ FALLBACK ДЛЯ SPA
-app.get('*', (req, res) => {
-  console.log('📦 Serving index.html for:', req.url);
-  res.sendFile(path.join(staticPath, 'index.html'));
+  res.json({
+    status: 'OK',
+    staticPath: staticPath || 'not found',
+    staticExists: !!staticPath,
+  });
 });
 
 const gameManager = new GameManager();
 gameManager.setIoServer(io);
 
 io.on('connection', (socket) => {
-  console.log(`🔌 Користувач підключився: ${socket.id}`);
+  console.log(`🔌 User connected: ${socket.id}`);
   registerSocketHandlers(socket, io, gameManager);
 });
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`🚀 Сервер запущено на порті ${PORT}`);
-  console.log(`📁 Static path: ${staticPath}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
