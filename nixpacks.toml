@@ -1,0 +1,23 @@
+[phases.setup]
+cmds = ["npm install"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+# Явно указываем сохранять фронтенд
+[phases.install]
+cmds = ["echo 'Keeping frontend dist directory'"]
+
+[start]
+cmd = "cd packages/backend && npm start"
+
+[build]
+env = { NODE_ENV = "production" }
+
+# Важно: указываем какие файлы нужно сохранить
+[build.files]
+include = [
+    "packages/frontend/dist/**",
+    "packages/backend/dist/**",
+    "node_modules/**"
+]

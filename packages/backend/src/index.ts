@@ -18,23 +18,32 @@ const io = new Server(server, {
   },
 });
 
+// ✅ РАЗРЕШАЕМ CSP ДЛЯ INLINE СКРИПТОВ
 app.use((req, res, next) => {
   res.setHeader(
     'Content-Security-Policy',
     // eslint-disable-next-line quotes
-    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;",
+    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' ws: wss:;",
   );
   next();
 });
 
-app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+// ✅ ПРОВЕРЯЕМ СУЩЕСТВОВАНИЕ ПАПКИ СТАТИКИ
+const staticPath = path.join(__dirname, '../../frontend/dist');
+console.log('🔄 Serving static from:', staticPath);
 
+// ✅ SERVING СТАТИКИ С ПРОВЕРКОЙ
+app.use(express.static(staticPath));
+
+// ✅ API HEALTH CHECK
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK' });
+  res.json({ status: 'OK', staticPath });
 });
 
+// ✅ FALLBACK ДЛЯ SPA
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+  console.log('📦 Serving index.html for:', req.url);
+  res.sendFile(path.join(staticPath, 'index.html'));
 });
 
 const gameManager = new GameManager();
@@ -48,4 +57,5 @@ io.on('connection', (socket) => {
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`🚀 Сервер запущено на порті ${PORT}`);
+  console.log(`📁 Static path: ${staticPath}`);
 });
