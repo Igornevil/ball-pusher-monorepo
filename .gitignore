@@ -36,4 +36,5 @@ npm-debug.log*
 /public/dist
 
 # Vite.js
-.vite
+.vitepackages/backend/dist/
+packages/frontend/dist/

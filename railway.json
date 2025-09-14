@@ -2,9 +2,9 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "nixpacks",
-    "buildCommand": "npm run build && echo 'Checking frontend dist...' && ls -la packages/frontend/dist/"
+    "buildCommand": "cd packages/backend && npm run build"
   },
   "deploy": {
-    "startCommand": "cd packages/backend && echo 'Current directory:' && pwd && echo 'Files in frontend dist:' && ls -la ../../frontend/dist/ && npm start"
+    "startCommand": "cd packages/backend && node -e \"console.log('Server starting...'); require('./dist/server.js');\""
   }
 }
