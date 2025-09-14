@@ -18,10 +18,19 @@ const io = new Server(server, {
   },
 });
 
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    // eslint-disable-next-line quotes
+    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;",
+  );
+  next();
+});
+
 app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Server is running' });
+  res.json({ status: 'OK' });
 });
 
 app.get('*', (req, res) => {
