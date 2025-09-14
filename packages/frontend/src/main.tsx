@@ -1,4 +1,5 @@
 import React from 'react';
+import '@pixi/unsafe-eval';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { Provider } from 'react-redux';

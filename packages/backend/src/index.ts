@@ -24,7 +24,15 @@ app.use((req, res, next) => {
   res.setHeader(
     'Content-Security-Policy',
     // eslint-disable-next-line quotes
-    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' ws: wss:;",
+    "default-src 'self'; " +
+      // eslint-disable-next-line quotes
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+      // eslint-disable-next-line quotes
+      "style-src 'self' 'unsafe-inline'; " +
+      // eslint-disable-next-line quotes
+      "img-src 'self' data: blob:; " +
+      // eslint-disable-next-line quotes
+      "connect-src 'self' ws: wss:;",
   );
   next();
 });
