@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default [
-  // ===== FRONTEND (без изменений) =====
+  // ===== FRONTEND =====
   {
     files: ['packages/frontend/**/*.{ts,tsx,js,jsx}'],
     ignores: ['packages/frontend/dist/**'],
@@ -26,11 +26,11 @@ export default [
     },
     rules: {
       semi: ['error', 'always'],
-      quotes: ['error', 'single'],
+      quotes: ['error', 'single', { avoidEscape: true }],
     },
   },
 
-  // ===== BACKEND (финальная, исправленная версия) =====
+  // ===== BACKEND =====
   {
     files: ['packages/backend/**/*.{ts,js}'],
     ignores: ['packages/backend/dist/**'],
@@ -53,7 +53,7 @@ export default [
     },
     rules: {
       semi: ['error', 'always'],
-      quotes: ['error', 'single'],
+      quotes: ['error', 'single', { avoidEscape: true }],
     },
   },
 ];
