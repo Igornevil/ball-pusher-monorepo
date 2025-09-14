@@ -5,6 +5,6 @@
     "buildCommand": "cd packages/backend && npm run build"
   },
   "deploy": {
-    "startCommand": "cd packages/backend && node -e \"console.log('Server starting...'); require('./dist/server.js');\""
+    "startCommand": "cd packages/backend && node dist/index.js"
   }
 }
