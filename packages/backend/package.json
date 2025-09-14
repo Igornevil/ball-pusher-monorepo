@@ -8,7 +8,7 @@
     "dev": "node --loader ts-node/esm src/index.ts",
     "dev1": "nodemon",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "node dist/index.js",
     "lint": "echo 'No lint for backend'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
