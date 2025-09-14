@@ -5,7 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch src --ext ts --exec \"ts-node src/server.ts\"",
+    "dev": "node --loader ts-node/esm src/index.ts",
+    "dev1": "nodemon",
     "build": "tsc",
     "start": "node dist/server.js",
     "lint": "echo 'No lint for backend'",
@@ -16,12 +17,28 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.21.2",
+    "matter-js": "^0.20.0",
+    "raf": "^3.4.1",
+    "socket.io": "^4.8.1",
+    "uuid": "^13.0.0",
     "ws": "^8.18.3"
   },
   "devDependencies": {
     "@types/express": "^4.17.23",
+    "@types/matter-js": "^0.20.0",
+    "@types/raf": "^3.4.3",
+    "@types/uuid": "^10.0.0",
     "@types/ws": "^8.18.1",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "~5.8.3"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": "ts",
+    "exec": "tsc && node dist/server.js"
   }
 }
