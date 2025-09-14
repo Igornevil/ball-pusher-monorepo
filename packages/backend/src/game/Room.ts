@@ -47,10 +47,7 @@ export class Room implements IGameRoom {
       this.gameDuration = null;
 
       const stateToSend = this.getGameStateForClient();
-      console.log(
-        `[Room ${this.id}] Гра почалася. Надсилаємо стан:`,
-        stateToSend,
-      );
+      console.log(`[Room ${this.id}] Гра почалася. Надсилаємо стан:`);
 
       this.io?.to(this.id).emit('game_state_update', stateToSend);
       this.startGameLoop();
